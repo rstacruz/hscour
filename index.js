@@ -43,6 +43,7 @@ assign(scour.prototype, {
 
   at: function at (idx) {
     var key = this.keys()[idx]
+    if (!key) return new this.constructor({}) // undefined
     return new this.constructor({
       root: this.root,
       keypath: join(this.keypath, key)
@@ -66,6 +67,7 @@ assign(scour.prototype, {
 
   last: function last () {
     var keys = this.keys()
+    if (!keys || keys.length === 0) return new this.constructor({}) // undefined
     return new this.constructor({
       root: this.root,
       keypath: join(this.keypath, keys && keys[keys.length - 1])
@@ -85,7 +87,9 @@ assign(scour.prototype, {
   toArray: null,
 
   keys: function keys () {
-    return hamt.keys(this.data()) || []
+    var data = this.data()
+    if (typeof data === 'object' && data !== null) return hamt.keys(data)
+    else return Object.keys(hamt.toJS(data))
   },
 
   len: function len () {

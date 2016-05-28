@@ -11,11 +11,11 @@ test('.forEach() arrays', (t) => {
     result.push({ item, key, idx }))
 
   t.deepEqual(result[0].item.val(), { apple: true })
-  t.deepEqual(result[0].key, 0)
+  t.deepEqual(result[0].key, '0')
   t.deepEqual(result[0].idx, 0)
 
   t.deepEqual(result[1].item.val(), { banana: true })
-  t.deepEqual(result[1].key, 1)
+  t.deepEqual(result[1].key, '1')
   t.deepEqual(result[1].idx, 1)
   t.end()
 })

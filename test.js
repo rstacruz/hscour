@@ -1,4 +1,5 @@
 var scour = require('./index')
+var _scour = require('scourjs')
 var test = require('tape')
 
 const source =
@@ -27,5 +28,43 @@ test('scour', t => {
 test('keys', t => {
   var data = scour(source)
   t.deepEqual(data.go('artists').keys(), ['1', '2', '3', '4'])
+  t.end()
+})
+
+test('get()', t => {
+  t.deepEqual(scour({a: 1}).get(), {a: 1}, 'objects')
+  t.deepEqual(scour({}).get(), {}, 'empty objects')
+  t.deepEqual(scour([1]).get(), [1], 'arrays')
+  t.deepEqual(scour([]).get(), [], 'empty arrays')
+  t.equal(scour('hi').get(), 'hi', 'strings')
+  t.equal(scour(1).get(), 1, 'numbers')
+  t.equal(scour(true).get(), true, 'true')
+  t.equal(scour(false).get(), false, 'false')
+  t.equal(scour(null).get(), null, 'null')
+  t.equal(scour(undefined).get(), undefined, 'undefined')
+  t.end()
+})
+
+test('keys()', t => {
+  t.deepEqual(scour({a: 1}).keys(), ['a'], 'objects')
+  t.deepEqual(scour({}).keys(), [], 'empty objects')
+  t.deepEqual(scour('hi').keys(), ['0', '1'], 'strings')
+  t.deepEqual(scour('hi').keys(), ['0', '1'], 'strings')
+  t.end()
+})
+
+test('first()', t => {
+  t.deepEqual(scour([]).first().val(), undefined, 'array, undefined first')
+  t.deepEqual(scour(['a']).first().val(), 'a', 'array, first val')
+  t.deepEqual(scour({}).first().val(), undefined, 'obj, undefined first')
+  t.deepEqual(scour({ key: 'a'}).first().val(), 'a', 'obj, first val')
+  t.end()
+})
+
+test('last()', t => {
+  t.deepEqual(scour([]).last().val(), undefined, 'array, undefined last')
+  t.deepEqual(scour(['a']).last().val(), 'a', 'array, last val')
+  t.deepEqual(scour({}).last().val(), undefined, 'obj, undefined last')
+  t.deepEqual(scour({ key: 'a'}).last().val(), 'a', 'obj, last val')
   t.end()
 })
