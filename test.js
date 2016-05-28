@@ -13,15 +13,31 @@ const source =
       2: { id: 2, name: 'Come Fly With Me', genre: 'Jazz', artist_id: 2 },
       3: { id: 3, name: '1984', genre: 'Pop', artist_id: 4 } } }
 
-test('scour', t => {
+test('get()', t => {
   var data = scour(source)
 
   t.equal(data.get('artists.1.name'), 'Ella Fitzgerald', 'get() deep')
+  t.equal(data.get('artists', '1', 'name'), 'Ella Fitzgerald', 'get() multi')
+  t.equal(data.get('artists', 1, 'name'), 'Ella Fitzgerald', 'get() multi with number')
+  t.equal(data.get(['artists', 1, 'name']), 'Ella Fitzgerald', 'get() array')
+  t.equal(data.get(['artists', 1]).name, 'Ella Fitzgerald', 'get() as obj')
+  t.end()
+})
+
+test('go()', t => {
+  var data = scour(source)
+
   t.equal(data.go('artists').get('1.name'), 'Ella Fitzgerald', 'go().get()')
   t.equal(data.go('artists').set('1.name', 'John').get('1.name'), 'John', 'go().set()')
   t.deepEqual(data.get('artists.1'), source.artists[1], 'get() deep, object')
-  t.equal(data.extend({ a: 1 }).get('a'), 1, 'extend')
 
+  t.end()
+})
+
+test('extend()', t => {
+  var data = scour(source)
+
+  t.equal(data.extend({ a: 1 }).get('a'), 1, 'extend')
   t.end()
 })
 

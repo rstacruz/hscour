@@ -39,6 +39,7 @@ assign(scour.prototype, {
   },
 
   go: function go (keypath) {
+    keypath = pathFromArgs(arguments)
     return new this.constructor({
       root: this.root,
       keypath: join(this.keypath, keypath)
@@ -83,6 +84,7 @@ assign(scour.prototype, {
   // retrieve
 
   get: function get (keypath) {
+    keypath = pathFromArgs(arguments)
     var data = this.data()
     if (isHamt(data)) return hamt.get(data, keypath)
     if (!keypath || keypath.length === 0) return data
@@ -113,6 +115,7 @@ assign(scour.prototype, {
   },
 
   del: function del (keypath) {
+    keypath = pathFromArgs(arguments)
     if (!this.root || typeof this.root !== 'object') return this
     return new this.constructor({
       root: hamt.del(this.root, join(this.keypath, keypath)),
@@ -177,6 +180,12 @@ Scour.extend = require('./lib/extend')
 
 function isHamt (data) {
   return typeof data === 'object' && data
+}
+
+function pathFromArgs (args) {
+  if (args.length === 0) return []
+  if (args.length === 1) return args[0]
+  else return [].slice.apply(args)
 }
 
 module.exports = Scour
