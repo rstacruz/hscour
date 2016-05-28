@@ -173,19 +173,7 @@ function Scour (data) {
 
 Scour.class = scour
 
-Scour.extend = function (props, statics) {
-  var NewClass = require('simpler-extend').call(this.class, props)
-
-  function Scour (data) {
-    return new NewClass({ data: data })
-  }
-
-  assign(Scour, this)
-  Scour.class = NewClass
-  if (statics) assign(Scour, statics)
-
-  return Scour
-}
+Scour.extend = require('./lib/extend')
 
 function isHamt (data) {
   return typeof data === 'object' && data
