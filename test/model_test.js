@@ -2,7 +2,7 @@
 
 const test = require('tape')
 const scour = require('../index')
-var model = require('../model')
+var model = require('../extensions/model')
 
 const data = { users: { 1: { name: 'john' } } }
 

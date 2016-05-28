@@ -1,4 +1,4 @@
-var buildExtensions = require('./lib/build_extensions')
+var buildExtensions = require('../lib/build_extensions')
 var forEach = require('fast.js/array/forEach')
 var assign = require('fast.js/object/assign')
 
