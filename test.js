@@ -16,11 +16,11 @@ const source =
 test('scour', t => {
   var data = scour(source)
 
-  t.equal(data.get('artists.1.name'), 'Ella Fitzgerald')
-  t.equal(data.go('artists').get('1.name'), 'Ella Fitzgerald')
-  t.equal(data.go('artists').set('1.name', 'John').get('1.name'), 'John')
-  t.deepEqual(data.get('artists.1'), source.artists[1])
-  t.equal(data.extend({ a: 1 }).get('a'), 1)
+  t.equal(data.get('artists.1.name'), 'Ella Fitzgerald', 'get() deep')
+  t.equal(data.go('artists').get('1.name'), 'Ella Fitzgerald', 'go().get()')
+  t.equal(data.go('artists').set('1.name', 'John').get('1.name'), 'John', 'go().set()')
+  t.deepEqual(data.get('artists.1'), source.artists[1], 'get() deep, object')
+  t.equal(data.extend({ a: 1 }).get('a'), 1, 'extend')
 
   t.end()
 })
@@ -48,8 +48,11 @@ test('get()', t => {
 test('keys()', t => {
   t.deepEqual(scour({a: 1}).keys(), ['a'], 'objects')
   t.deepEqual(scour({}).keys(), [], 'empty objects')
+  t.deepEqual(scour(true).keys(), [], 'boolean')
   t.deepEqual(scour('hi').keys(), ['0', '1'], 'strings')
   t.deepEqual(scour('hi').keys(), ['0', '1'], 'strings')
+  t.deepEqual(scour(null).keys(), [], 'null')
+  t.deepEqual(scour(undefined).keys(), [], 'undefined')
   t.end()
 })
 

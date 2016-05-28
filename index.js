@@ -6,15 +6,19 @@ var map = require('fast.js/array/map')
 var assign = require('fast.js/object/assign')
 
 function scour (options) {
-  if ('data' in options) {
-    this.root = hamt.fromJS(options.data)
-  } else {
-    this.root = options.root
-  }
-  this.keypath = options.keypath || []
+  this.init(options)
 }
 
 assign(scour.prototype, {
+  init: function init (options) {
+    if ('data' in options) {
+      this.root = hamt.fromJS(options.data)
+    } else {
+      this.root = options.root
+    }
+    this.keypath = options.keypath || []
+  },
+
   valueOf: function valueOf () {
     return hamt.toJS(this.data())
   },
@@ -79,34 +83,37 @@ assign(scour.prototype, {
   // retrieve
 
   get: function get (keypath) {
-    return hamt.get(this.data(), keypath)
+    var data = this.data()
+    if (isHamt(data)) return hamt.get(data, keypath)
+    if (!keypath || keypath.length === 0) return data
   },
-
-  len: null,
 
   toArray: null,
 
   keys: function keys () {
     var data = this.data()
-    if (typeof data === 'object' && data !== null) return hamt.keys(data)
-    else return Object.keys(hamt.toJS(data))
+    if (isHamt(data)) return hamt.keys(data)
+    else return Object.keys(hamt.toJS(data) || {})
   },
 
   len: function len () {
     var data = this.data()
-    if (data) return hamt.len(this.data())
+    if (!data) return 0
+    return isHamt(data) ? hamt.len(data) : data.length
   },
 
   // update
 
   set: function set (keypath, val) {
+    var root = (this.root && typeof this.root === 'object') ? this.root : hamt.empty
     return new this.constructor({
-      root: hamt.set(this.root, join(this.keypath, keypath), val.valueOf()),
+      root: hamt.set(root, join(this.keypath, keypath), toVal(val)),
       keypath: this.keypath
     })
   },
 
   del: function del (keypath) {
+    if (!this.root || typeof this.root !== 'object') return this
     return new this.constructor({
       root: hamt.del(this.root, join(this.keypath, keypath)),
       keypath: this.keypath
@@ -167,6 +174,10 @@ function iteration (iteratorFn) {
   }
 }
 
+function toVal (val) {
+  return val.valueOf ? val.valueOf() : val
+}
+
 function Scour (data) {
   return new scour({ data: data })
 }
@@ -184,6 +195,10 @@ Scour.extend = function (props, statics) {
   if (statics) assign(Scour, statics)
 
   return Scour
+}
+
+function isHamt (data) {
+  return typeof data === 'object' && data
 }
 
 module.exports = Scour
