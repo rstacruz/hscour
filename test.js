@@ -19,6 +19,15 @@ test('scour', t => {
   t.equal(data.go('artists').get('1.name'), 'Ella Fitzgerald')
   t.equal(data.go('artists').set('1.name', 'John').get('1.name'), 'John')
   t.deepEqual(data.get('artists.1'), source.artists[1])
+  t.equal(data.extend({ a: 1 }).get('a'), 1)
+
+  t.end()
+})
+
+test('keys', t => {
+  var data = scour(source)
+
+  t.deepEqual(data.go('artists').keys(), ['1', '2', '3', '4'])
 
   t.end()
 })

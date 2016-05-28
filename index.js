@@ -1,59 +1,120 @@
 var hamt = require('@rstacruz/nested-hamt')
 var join = require('./lib/join')
+var forEach = require('fast.js/array/forEach')
+var map = require('fast.js/array/map')
 
-function scour (obj, options) {
-  if (!(this instanceof scour)) return new scour(obj, options)
-  if (options && 'hamt' in options) {
-    this._data = options.hamt
-  } else if (typeof obj !== 'undefined') {
-    this._data = hamt.fromJS(obj)
+function scour (options) {
+  if ('data' in options) {
+    this.root = hamt.fromJS(options.data)
+  } else {
+    this.root = options.root
   }
-  this.keypath = options && options.keypath || []
-  this.root = options && options.root || this
+  this.keypath = options.keypath || []
 }
 
 scour.prototype = {
+  ctor: scour,
+
   valueOf: function valueOf () {
-    return hamt.toJS(this._data)
+    return hamt.toJS(this.data())
   },
 
+  // Returns a HAMT tree.
   data: function data () {
-    if (!('_data' in this)) {
-      this._data = this.root.get(this.keypath)
-    }
+    if (this.keypath.length === 0) return this.root
+    if (!('_data' in this)) this._data = hamt.getRaw(this.root, this.keypath)
     return this._data
   },
 
+  // retrieve
+
   get: function get (keypath) {
-    return hamt.get(this._data, keypath)
+    return hamt.get(this.data(), keypath)
   },
+
+  keys: function keys () {
+    return hamt.keys(this.data())
+  },
+
+  // update
 
   set: function set (keypath, val) {
-    if (this.keypath.length !== 0) {
-      var fullpath = join(this.keypath, keypath)
-      return this.root
-        .reset({ hamt: hamt.set(this.root._data, fullpath, val), })
-        .go(this.keypath)
-    }
-    return this.reset({ hamt: hamt.set(this._data, keypath, val) })
+    return new this.ctor({
+      root: hamt.set(this.root, join(this.keypath, keypath), val),
+      keypath: this.keypath
+    })
   },
 
-  go: function go (keypath) {
-    return this.reset({
-      hamt: hamt.getRaw(this._data, keypath),
-      keypath: join(this.keypath, keypath),
+  del: function del (keypath) {
+    return new this.ctor({
+      root: hamt.del(this.root, join(this.keypath, keypath), val),
+      keypath: this.keypath
+    })
+  },
+
+  extend: function extend () {
+    var newVal = hamt.extend.apply(null, [this.data()].concat([].slice.call(arguments)))
+    return new this.ctor({
+      root: hamt.setRaw(this.root, this.keypath, newVal),
+      keypath: this.keypath
+    })
+  },
+
+  // Chain/travesal
+
+  goRoot: function root () {
+    return new this.ctor({
       root: this.root
     })
   },
 
-  reset: function reset (options) {
-    return new scour(undefined, {
-      hamt: 'hamt' in options ? options.hamt : this.hamt,
-      keypath: 'keypath' in options ? options.keypath : this.keypath,
-      root: 'root' in options ? options.root : this.root
+  go: function go (keypath) {
+    return new this.ctor({
+      root: this.root,
+      keypath: join(this.keypath, keypath)
     })
+  },
+
+  // Iteration
+
+  forEach: function (fn) {
+    var keys = this.keys()
+    var ctor = this.ctor
+    var root = this.root
+    var keypath = this.keypath
+    forEach(keys, function (key, idx) {
+      fn(new ctor({ root: root, keypath: join(keypath, key) }), key, idx)
+    })
+  },
+
+  map: function (fn) {
+    var keys = this.keys()
+    var ctor = this.ctor
+    var root = this.root
+    var keypath = this.keypath
+    return map(keys, function (key, idx) {
+      return fn(new ctor({ root: root, keypath: join(keypath, key) }), key, idx)
+    })
+  },
+
+  indexedMap: function (fn) {
+    var keys = this.keys()
+    var obj = {}
+    var ctor = this.ctor
+    var root = this.root
+    var keypath = this.keypath
+    return map(keys, function (key, idx) {
+      var res = fn(new ctor({ root: root, keypath: join(keypath, key) }), key, idx)
+      obj[res[0]] = res[1]
+    })
+    return obj
   }
 }
 
+function S (data) {
+  return new scour({ data: data })
+}
 
-module.exports = scour
+S.prototype = scour.prototype
+
+module.exports = S

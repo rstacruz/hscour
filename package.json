@@ -10,9 +10,12 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "object-assign": "4.1.0",
+    "scourjs": "1.0.1",
     "tape": "4.5.1"
   },
   "dependencies": {
-    "@rstacruz/nested-hamt": "1.0.0"
+    "@rstacruz/nested-hamt": "1.0.0",
+    "fast.js": "0.1.1"
   }
 }
