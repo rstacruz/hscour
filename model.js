@@ -7,7 +7,6 @@ module.exports = function (scour, extensions) {
 
   return scour.extend({
     init: function (options) {
-      console.log('=> init()', exts)
       scour.class.prototype.init.call(this, options)
       var path = this.keypath.join('.')
       var self = this

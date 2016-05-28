@@ -28,6 +28,15 @@ bm('go().get()', {
   }
 })
 
+bm('get()', {
+  'hscour': function () {
+    hData.get('artists.1.name')
+  },
+  'scour': function () {
+    sData.get('artists.1.name')
+  }
+})
+
 bm('set()', {
   'hscour': function () {
     hData.set('artists.5.name', 'Louis Armstrong')

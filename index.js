@@ -191,7 +191,8 @@ Scour.extend = function (props, statics) {
     return new NewClass({ data: data })
   }
 
-  Scour.class = NewClass.class
+  assign(Scour, this)
+  Scour.class = NewClass
   if (statics) assign(Scour, statics)
 
   return Scour

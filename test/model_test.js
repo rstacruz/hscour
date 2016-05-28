@@ -26,62 +26,49 @@ test('.use()', (t) => {
     'john',
     'root')
 
-//   t.deepEqual(
-//     scour(data)
-//       .use({ '**': { users } })
-//       .users()
-//       .get('1.name'),
-//     'john',
-//     '** on root')
+  t.deepEqual(
+    model(scour, { '**': { users } })(data)
+      .users()
+      .get('1.name'),
+    'john',
+    '** on root')
 
-//   t.deepEqual(
-//     scour(data)
-//       .use({ '**': { fullname } })
-//       .go('users.1')
-//       .fullname(),
-//     'Mr. john',
-//     '** on non-root')
+  t.deepEqual(
+    model(scour, { '**': { fullname } })(data)
+      .go('users.1')
+      .fullname(),
+    'Mr. john',
+    '** on non-root')
 
-//   t.deepEqual(
-//     scour(data)
-//       .use({ 'users.*': { fullname } })
-//       .go('users')
-//       .go(1)
-//       .fullname(),
-//     'Mr. john',
-//     'users.* (with multiple .go)')
+  t.deepEqual(
+    model(scour, { 'users.*': { fullname } })(data)
+      .go('users')
+      .go(1)
+      .fullname(),
+    'Mr. john',
+    'users.* (with multiple .go)')
 
-//   t.deepEqual(
-//     scour(data)
-//       .go('users')
-//       .use({ '*': { fullname } })
-//       .go(1)
-//       .fullname(),
-//     'Mr. john',
-//     '*')
+  t.deepEqual(
+    model(scour, { '**': { fullname } })(data)
+      .go('users')
+      .goRoot()
+      .go('users').go(1)
+      .fullname(),
+    'Mr. john',
+    'carries over to new root')
 
-//   t.deepEqual(
-//     scour(data)
-//       .go('users')
-//       .use({ '*': { fullname } })
-//       .root
-//       .go('users').go(1)
-//       .fullname(),
-//     'Mr. john',
-//     'carries over to new root')
-
-//   t.deepEqual(
-//     scour(data)
-//       .use({ 'users.*': { fullname } })
-//       .use({ 'users.*': {
-//         greeting: function () {
-//           return `Hello, ${this.fullname()}`
-//         }
-//       } })
-//       .go('users', 1)
-//       .greeting(),
-//     'Hello, Mr. john',
-//     'stacks')
+  var e1 = { 'users.*': { fullname } }
+  var e2 = { 'users.*': { greeting } }
+  t.deepEqual(
+    model(model(scour, e1), e2)(data)
+      .go(['users', 1])
+      .greeting(),
+    'Hello, Mr. john',
+    'stacks')
 
   t.end()
 })
+
+function greeting () {
+  return `Hello, ${this.fullname()}`
+}
