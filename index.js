@@ -26,14 +26,66 @@ scour.prototype = {
     return this._data
   },
 
+  // Chain/travesal
+
+  goRoot: function root () {
+    return new this.ctor({
+      root: this.root
+    })
+  },
+
+  go: function go (keypath) {
+    return new this.ctor({
+      root: this.root,
+      keypath: join(this.keypath, keypath)
+    })
+  },
+
+  at: function at (idx) {
+    var key = this.keys()[idx]
+    return new this.ctor({
+      root: this.root,
+      keypath: join(this.keypath, key)
+    })
+  },
+
+  getAt: function getAt (idx) {
+    var key = this.keys()[idx]
+    if (key) return hamt.get(this.data(), key)
+  },
+
+  filter: null,
+
+  reject: null,
+
+  find: null,
+
+  first: function first () {
+    return this.at(0)
+  },
+
+  last: function last () {
+    var keys = this.keys()
+    return new this.ctor({
+      root: this.root,
+      keypath: join(this.keypath, keys && keys[keys.length - 1])
+    })
+  },
+
+  sortBy: null,
+
   // retrieve
 
   get: function get (keypath) {
     return hamt.get(this.data(), keypath)
   },
 
+  len: null,
+
+  toArray: null,
+
   keys: function keys () {
-    return hamt.keys(this.data())
+    return hamt.keys(this.data()) || []
   },
 
   // update
@@ -60,42 +112,23 @@ scour.prototype = {
     })
   },
 
-  // Chain/travesal
+  // Utils
+  
+  use: null,
 
-  goRoot: function root () {
-    return new this.ctor({
-      root: this.root
-    })
-  },
+  index: null,
 
-  go: function go (keypath) {
-    return new this.ctor({
-      root: this.root,
-      keypath: join(this.keypath, keypath)
-    })
-  },
+  toJSON: null,
+
+  equal: null,
 
   // Iteration
 
-  forEach: function (fn) {
-    var keys = this.keys()
-    var ctor = this.ctor
-    var root = this.root
-    var keypath = this.keypath
-    forEach(keys, function (key, idx) {
-      fn(new ctor({ root: root, keypath: join(keypath, key) }), key, idx)
-    })
-  },
+  forEach: iteration(forEach),
 
-  map: function (fn) {
-    var keys = this.keys()
-    var ctor = this.ctor
-    var root = this.root
-    var keypath = this.keypath
-    return map(keys, function (key, idx) {
-      return fn(new ctor({ root: root, keypath: join(keypath, key) }), key, idx)
-    })
-  },
+  map: iteration(map),
+
+  mapObject: null,
 
   indexedMap: function (fn) {
     var keys = this.keys()
@@ -108,6 +141,18 @@ scour.prototype = {
       obj[res[0]] = res[1]
     })
     return obj
+  }
+}
+
+function iteration (iteratorFn) {
+  return function (fn) {
+    var keys = this.keys()
+    var ctor = this.ctor
+    var root = this.root
+    var keypath = this.keypath
+    iteratorFn(keys, function (key, idx) {
+      return fn(new ctor({ root: root, keypath: join(keypath, key) }), key, idx)
+    })
   }
 }
 
