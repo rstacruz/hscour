@@ -4,7 +4,7 @@
   "description": "Traverse objects and arrays immutably",
   "main": "index.js",
   "scripts": {
-    "test": "tape test.js test/*.js"
+    "test": "tape test.js test/*.js | tap-diff"
   },
   "keywords": [
     "immutable",
@@ -15,6 +15,7 @@
   "devDependencies": {
     "object-assign": "4.1.0",
     "scourjs": "1.0.1",
+    "tap-diff": "0.1.1",
     "tape": "4.5.1"
   },
   "dependencies": {
