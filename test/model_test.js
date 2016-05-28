@@ -1,10 +1,10 @@
 'use strict'
 
-const test = require('tape')
-const scour = require('../index')
+var test = require('tape')
+var scour = require('../index')
 var model = require('../extensions/model')
 
-const data = { users: { 1: { name: 'john' } } }
+var data = { users: { 1: { name: 'john' } } }
 
 function fullname () { return 'Mr. ' + this.get('name') }
 function users () { return this.go('users') }

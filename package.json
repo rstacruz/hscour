@@ -6,7 +6,10 @@
   "scripts": {
     "test": "tape test.js test/*.js"
   },
-  "keywords": ["immutable", "hamt"],
+  "keywords": [
+    "immutable",
+    "hamt"
+  ],
   "author": "Rico Sta. Cruz <hi@ricostacruz.com>",
   "license": "MIT",
   "devDependencies": {
@@ -17,6 +20,7 @@
   "dependencies": {
     "@rstacruz/nested-hamt": "1.1.2",
     "fast.js": "0.1.1",
+    "scour-search": "0.3.3",
     "simpler-extend": "1.1.0"
   },
   "directories": {

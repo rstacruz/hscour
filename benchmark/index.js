@@ -4,6 +4,7 @@
 const bm = require('./bm')
 const hscour = require('../index')
 const scour = require('scourjs')
+const hamt = require('@rstacruz/nested-hamt')
 
 const data =
   { artists:
@@ -18,6 +19,7 @@ const data =
 
 const sData = scour(data)
 const hData = hscour(data)
+const htData = hamt.fromJS(data)
 
 bm('go().get()', {
   'hscour': function () {
@@ -34,6 +36,9 @@ bm('get()', {
   },
   'scour': function () {
     sData.get('artists.1.name')
+  },
+  'nested-hamt': function () {
+    hamt.get(htData, 'artists.1.name')
   }
 })
 
@@ -43,6 +48,9 @@ bm('set()', {
   },
   'scour': function () {
     sData.set('artists.5.name', 'Louis Armstrong')
+  },
+  'nested-hamt': function () {
+    hamt.set(htData, 'artists.5.name', 'Louis Armstrong')
   }
 })
 

@@ -60,12 +60,6 @@ assign(scour.prototype, {
     if (key) return hamt.get(this.data(), key)
   },
 
-  filter: null,
-
-  reject: null,
-
-  find: null,
-
   first: function first () {
     return this.at(0)
   },
@@ -78,8 +72,6 @@ assign(scour.prototype, {
       keypath: join(this.keypath, keys && keys[keys.length - 1])
     })
   },
-
-  sortBy: null,
 
   // retrieve
 
