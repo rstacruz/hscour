@@ -25,7 +25,7 @@ test('scour', t => {
   t.end()
 })
 
-test('keys', t => {
+test('keys()', t => {
   var data = scour(source)
   t.deepEqual(data.go('artists').keys(), ['1', '2', '3', '4'])
   t.end()
@@ -34,6 +34,15 @@ test('keys', t => {
 test('go()', t => {
   t.deepEqual(scour({a: 'hi'}).go('a').val(), 'hi', 'go(str)')
   t.deepEqual(scour({1: 'hi'}).go(1).val(), 'hi', 'go(number)')
+  t.end()
+})
+
+test('equal()', t => {
+  var src = { a: { b: 'c' } }
+  var root = scour(src)
+
+  t.deepEqual(root.go('a').equal(root.go('a')), true, 'true')
+  t.deepEqual(root.go('a').equal(root.go('b')), false, 'false')
   t.end()
 })
 

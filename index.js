@@ -129,33 +129,22 @@ assign(scour.prototype, {
   },
 
   // Utils
-  
+
   index: null,
 
   toJSON: null,
 
-  equal: null,
+  equal: function (other) {
+    return other && other.root && other.keypath &&
+      this.root === other.root &&
+      this.keypath.join('.') === other.keypath.join('.')
+  },
 
   // Iteration
 
   forEach: iteration(forEach),
 
-  map: iteration(map),
-
-  mapObject: null,
-
-  indexedMap: function (fn) {
-    var keys = this.keys()
-    var obj = {}
-    var ctor = this.constructor
-    var root = this.root
-    var keypath = this.keypath
-    return map(keys, function (key, idx) {
-      var res = fn(new ctor({ root: root, keypath: join(keypath, key) }), key, idx)
-      obj[res[0]] = res[1]
-    })
-    return obj
-  }
+  map: iteration(map)
 })
 
 scour.prototype.val = scour.prototype.valueOf
