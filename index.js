@@ -1,7 +1,9 @@
+'use strict'
 var hamt = require('@rstacruz/nested-hamt')
 var join = require('./lib/join')
 var forEach = require('fast.js/array/forEach')
 var map = require('fast.js/array/map')
+var assign = require('fast.js/object/assign')
 
 function scour (options) {
   if ('data' in options) {
@@ -12,9 +14,7 @@ function scour (options) {
   this.keypath = options.keypath || []
 }
 
-scour.prototype = {
-  ctor: scour,
-
+assign(scour.prototype, {
   valueOf: function valueOf () {
     return hamt.toJS(this.data())
   },
@@ -29,13 +29,13 @@ scour.prototype = {
   // Chain/travesal
 
   goRoot: function root () {
-    return new this.ctor({
+    return new this.constructor({
       root: this.root
     })
   },
 
   go: function go (keypath) {
-    return new this.ctor({
+    return new this.constructor({
       root: this.root,
       keypath: join(this.keypath, keypath)
     })
@@ -43,7 +43,7 @@ scour.prototype = {
 
   at: function at (idx) {
     var key = this.keys()[idx]
-    return new this.ctor({
+    return new this.constructor({
       root: this.root,
       keypath: join(this.keypath, key)
     })
@@ -66,7 +66,7 @@ scour.prototype = {
 
   last: function last () {
     var keys = this.keys()
-    return new this.ctor({
+    return new this.constructor({
       root: this.root,
       keypath: join(this.keypath, keys && keys[keys.length - 1])
     })
@@ -88,25 +88,30 @@ scour.prototype = {
     return hamt.keys(this.data()) || []
   },
 
+  len: function len () {
+    var data = this.data()
+    if (data) return hamt.len(this.data())
+  },
+
   // update
 
   set: function set (keypath, val) {
-    return new this.ctor({
-      root: hamt.set(this.root, join(this.keypath, keypath), val),
+    return new this.constructor({
+      root: hamt.set(this.root, join(this.keypath, keypath), val.valueOf()),
       keypath: this.keypath
     })
   },
 
   del: function del (keypath) {
-    return new this.ctor({
-      root: hamt.del(this.root, join(this.keypath, keypath), val),
+    return new this.constructor({
+      root: hamt.del(this.root, join(this.keypath, keypath)),
       keypath: this.keypath
     })
   },
 
   extend: function extend () {
     var newVal = hamt.extend.apply(null, [this.data()].concat([].slice.call(arguments)))
-    return new this.ctor({
+    return new this.constructor({
       root: hamt.setRaw(this.root, this.keypath, newVal),
       keypath: this.keypath
     })
@@ -114,8 +119,6 @@ scour.prototype = {
 
   // Utils
   
-  use: null,
-
   index: null,
 
   toJSON: null,
@@ -133,7 +136,7 @@ scour.prototype = {
   indexedMap: function (fn) {
     var keys = this.keys()
     var obj = {}
-    var ctor = this.ctor
+    var ctor = this.constructor
     var root = this.root
     var keypath = this.keypath
     return map(keys, function (key, idx) {
@@ -142,12 +145,16 @@ scour.prototype = {
     })
     return obj
   }
-}
+})
+
+scour.prototype.val = scour.prototype.valueOf
+scour.prototype.toJSON = scour.prototype.valueOf
+scour.prototype.each = scour.prototype.forEach
 
 function iteration (iteratorFn) {
   return function (fn) {
     var keys = this.keys()
-    var ctor = this.ctor
+    var ctor = this.constructor
     var root = this.root
     var keypath = this.keypath
     iteratorFn(keys, function (key, idx) {
@@ -156,10 +163,23 @@ function iteration (iteratorFn) {
   }
 }
 
-function S (data) {
+function Scour (data) {
   return new scour({ data: data })
 }
 
-S.prototype = scour.prototype
+Scour.class = scour
 
-module.exports = S
+Scour.extend = function (props, statics) {
+  var NewClass = require('simpler-extend').call(this.class, props)
+
+  function Scour (data) {
+    return new NewClass({ data: data })
+  }
+
+  Scour.class = NewClass.class
+  if (statics) assign(Scour, statics)
+
+  return Scour
+}
+
+module.exports = Scour

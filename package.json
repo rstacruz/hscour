@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "node test.js"
+    "test": "tape test.js test/*.js"
   },
   "keywords": [],
   "author": "",
@@ -16,6 +16,7 @@
   },
   "dependencies": {
     "@rstacruz/nested-hamt": "1.0.0",
-    "fast.js": "0.1.1"
+    "fast.js": "0.1.1",
+    "simpler-extend": "1.1.0"
   }
 }

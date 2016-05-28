@@ -26,8 +26,6 @@ test('scour', t => {
 
 test('keys', t => {
   var data = scour(source)
-
   t.deepEqual(data.go('artists').keys(), ['1', '2', '3', '4'])
-
   t.end()
 })
