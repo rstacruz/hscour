@@ -1,14 +1,14 @@
 {
-  "name": "scour-hamt",
+  "name": "@rstacruz/hscour",
   "version": "1.0.0",
-  "description": "",
+  "description": "Traverse objects and arrays immutably",
   "main": "index.js",
   "scripts": {
     "test": "tape test.js test/*.js"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "keywords": ["immutable", "hamt"],
+  "author": "Rico Sta. Cruz <hi@ricostacruz.com>",
+  "license": "MIT",
   "devDependencies": {
     "object-assign": "4.1.0",
     "scourjs": "1.0.1",
@@ -18,5 +18,17 @@
     "@rstacruz/nested-hamt": "1.1.2",
     "fast.js": "0.1.1",
     "simpler-extend": "1.1.0"
-  }
+  },
+  "directories": {
+    "doc": "docs",
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rstacruz/hscour.git"
+  },
+  "bugs": {
+    "url": "https://github.com/rstacruz/hscour/issues"
+  },
+  "homepage": "https://github.com/rstacruz/hscour#readme"
 }
