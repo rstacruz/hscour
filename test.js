@@ -31,6 +31,12 @@ test('keys', t => {
   t.end()
 })
 
+test('go()', t => {
+  t.deepEqual(scour({a: 'hi'}).go('a').val(), 'hi', 'go(str)')
+  t.deepEqual(scour({1: 'hi'}).go(1).val(), 'hi', 'go(number)')
+  t.end()
+})
+
 test('get()', t => {
   t.deepEqual(scour({a: 1}).get(), {a: 1}, 'objects')
   t.deepEqual(scour({}).get(), {}, 'empty objects')

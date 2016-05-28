@@ -15,7 +15,7 @@
     "tape": "4.5.1"
   },
   "dependencies": {
-    "@rstacruz/nested-hamt": "1.0.0",
+    "@rstacruz/nested-hamt": "1.1.2",
     "fast.js": "0.1.1",
     "simpler-extend": "1.1.0"
   }
