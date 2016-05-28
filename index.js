@@ -100,26 +100,33 @@ assign(scour.prototype, {
 
   set: function set (keypath, val) {
     var root = (this.root && typeof this.root === 'object') ? this.root : hamt.empty
+    var fullpath = join(this.keypath, keypath)
+    val = toVal(val)
     return new this.constructor({
-      root: hamt.set(root, join(this.keypath, keypath), toVal(val)),
-      keypath: this.keypath
+      root: hamt.set(root, fullpath, val),
+      keypath: this.keypath,
+      operation: [ 'set', fullpath, val ]
     })
   },
 
   del: function del (keypath) {
     keypath = pathFromArgs(arguments)
+    var fullpath = join(this.keypath, keypath)
     if (!this.root || typeof this.root !== 'object') return this
     return new this.constructor({
-      root: hamt.del(this.root, join(this.keypath, keypath)),
-      keypath: this.keypath
+      root: hamt.del(this.root, fullpath),
+      keypath: this.keypath,
+      operation: [ 'del', fullpath ]
     })
   },
 
   extend: function extend () {
-    var newVal = hamt.extend.apply(null, [this.data()].concat([].slice.call(arguments)))
+    var extensions = [].slice.call(arguments)
+    var newVal = hamt.extend.apply(null, [this.data()].concat(extensions))
     return new this.constructor({
       root: hamt.setRaw(this.root, this.keypath, newVal),
-      keypath: this.keypath
+      keypath: this.keypath,
+      operation: [ 'extend', this.keypath, extensions ]
     })
   },
 
