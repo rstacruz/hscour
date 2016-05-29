@@ -105,7 +105,7 @@ assign(scour.prototype, {
     return new this.constructor({
       root: hamt.set(root, fullpath, val),
       keypath: this.keypath,
-      operation: [ 'set', fullpath, val ]
+      operation: { op: 'set', path: fullpath, val: val }
     })
   },
 
@@ -116,7 +116,7 @@ assign(scour.prototype, {
     return new this.constructor({
       root: hamt.del(this.root, fullpath),
       keypath: this.keypath,
-      operation: [ 'del', fullpath ]
+      operation: { op: 'del', path: fullpath }
     })
   },
 
@@ -126,7 +126,7 @@ assign(scour.prototype, {
     return new this.constructor({
       root: hamt.setRaw(this.root, this.keypath, newVal),
       keypath: this.keypath,
-      operation: [ 'extend', this.keypath, extensions ]
+      operation: { op: 'extend', path: this.keypath, val: extensions }
     })
   },
 

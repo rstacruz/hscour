@@ -18,8 +18,8 @@ module.exports = function (scour, indices) {
   return scour.extend({
     init: function (options) {
       scour.class.prototype.init.call(this, options)
-      if (options.operation && mutates(op.operation.name)) {
-        // updateIndices(searchIndices, data, [ op.operation.keypath ])
+      if (options.operation) {
+        // updateIndices(searchIndices, data, op.operation.keypath)
       }
     },
 
@@ -36,4 +36,7 @@ module.exports = function (scour, indices) {
 
 function mutates (op) {
   return op === 'set' || op === 'del' || op === 'extend'
+}
+
+function updateIndices (indices, data, keypath) {
 }
