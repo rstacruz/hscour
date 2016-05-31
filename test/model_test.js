@@ -9,8 +9,6 @@ var data = { users: { 1: { name: 'john' } } }
 function fullname () { return 'Mr. ' + this.get('name') }
 function users () { return this.go('users') }
 
-var user, db
-
 test('.use()', (t) => {
   t.deepEqual(
     scour.use(model, { 'users.*': { fullname } })(data)

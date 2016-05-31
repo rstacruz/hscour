@@ -1,6 +1,6 @@
 var Search = require('scour-search')
 var forEach = require('fast.js/object/forEach')
-var nz = require('@rstacruz/nested-hamt/lib/normalize_keypath')
+// var nz = require('@rstacruz/nested-hamt/lib/normalize_keypath')
 
 /*
  *     scour = indexed(scour, { users: 'name' })
@@ -8,7 +8,7 @@ var nz = require('@rstacruz/nested-hamt/lib/normalize_keypath')
 
 module.exports = function (scour, indices) {
   var searchIndices = {}
-  
+
   if (indices) {
     forEach(indices, function (field, keypath) {
       searchIndices[keypath] = Search({}).index(field)
@@ -34,9 +34,5 @@ module.exports = function (scour, indices) {
   })
 }
 
-function mutates (op) {
-  return op === 'set' || op === 'del' || op === 'extend'
-}
-
-function updateIndices (indices, data, keypath) {
-}
+// function updateIndices (indices, data, keypath) {
+// }

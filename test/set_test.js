@@ -3,8 +3,6 @@
 const test = require('tape')
 const scour = require('../index')
 
-var data, result
-
 test('.set() root', (t) => {
   var data = { users: { bob: { name: 'robert' } } }
   var result = scour(data).set(['users', 'bob'], { id: 2 })
@@ -45,14 +43,14 @@ test('.set() for nonroot', (t) => {
   var result = users.set(['matt'], { name: 'matthew' })
 
   t.deepEqual(
-    result.goRoot().val(), 
+    result.goRoot().val(),
     { users:
       { bob: { name: 'robert' },
         matt: { name: 'matthew' } } },
     'sets correct values in root')
 
   t.deepEqual(
-    result.goRoot().keypath, [], 'sets root keypath') 
+    result.goRoot().keypath, [], 'sets root keypath')
   t.deepEqual(
     result.keypath, ['users'], 'sets keypath')
   t.deepEqual(

@@ -2,7 +2,7 @@
 
 const test = require('tape')
 const scour = require('../index')
-var data, result, list
+var data, result
 
 test('.extend()', (t) => {
   data = { a: { bb: 1 } }

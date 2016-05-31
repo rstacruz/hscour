@@ -1,0 +1,9 @@
+{
+  "extends": [
+    "standard",
+    "standard-jsx"
+  ],
+  "rules": {
+    "new-cap": 0
+  }
+}

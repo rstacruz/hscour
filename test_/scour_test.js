@@ -2,6 +2,7 @@
 
 const test = require('tape')
 var scour = require('../index')
+var root
 
 const data =
   { users:
@@ -36,7 +37,6 @@ test('.each()', (t) => {
   t.deepEqual(results[1], [ { name: 'jake' }, '2' ])
   t.end()
 })
-
 
 test('.len()', (t) => {
   t.deepEqual(

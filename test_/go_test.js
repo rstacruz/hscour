@@ -11,11 +11,6 @@ const data = {
   }
 }
 
-const list = [
-  { name: 'apple' },
-  { name: 'banana' }
-]
-
 test('.go()', (t) => {
   const users = scour(data).go('users')
 

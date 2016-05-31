@@ -1,6 +1,7 @@
 var scour = require('./index')
-var _scour = require('scourjs')
 var test = require('tape')
+
+test('eslint', require('eslint-engine/tape')())
 
 const source =
   { artists:
@@ -91,7 +92,7 @@ test('first()', t => {
   t.deepEqual(scour([]).first().val(), undefined, 'array, undefined first')
   t.deepEqual(scour(['a']).first().val(), 'a', 'array, first val')
   t.deepEqual(scour({}).first().val(), undefined, 'obj, undefined first')
-  t.deepEqual(scour({ key: 'a'}).first().val(), 'a', 'obj, first val')
+  t.deepEqual(scour({ key: 'a' }).first().val(), 'a', 'obj, first val')
   t.end()
 })
 
@@ -99,6 +100,6 @@ test('last()', t => {
   t.deepEqual(scour([]).last().val(), undefined, 'array, undefined last')
   t.deepEqual(scour(['a']).last().val(), 'a', 'array, last val')
   t.deepEqual(scour({}).last().val(), undefined, 'obj, undefined last')
-  t.deepEqual(scour({ key: 'a'}).last().val(), 'a', 'obj, last val')
+  t.deepEqual(scour({ key: 'a' }).last().val(), 'a', 'obj, last val')
   t.end()
 })
