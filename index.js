@@ -177,6 +177,11 @@ Scour.class = scour
 
 Scour.extend = require('./lib/extend')
 
+Scour.use = function (plugin, options) {
+  var args = [].slice.call(arguments, 1)
+  return plugin.apply(null, [this].concat(args))
+}
+
 function isHamt (data) {
   return typeof data === 'object' && data
 }

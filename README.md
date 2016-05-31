@@ -144,7 +144,7 @@ Artist = {
 <!-- {.file-heading} -->
 
 ```js
-scour = model(scour, {
+scour = scour.use(model, {
   '': Root,
   'artists.*': Artist
 })
