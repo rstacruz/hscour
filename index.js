@@ -175,7 +175,42 @@ function Scour (data) {
 
 Scour.class = scour
 
+/**
+ * extend : extend(properties, statics)
+ * Extends the Scour object with more `properties`.
+ *
+ * `statics` is optional; if given, they will be added to `Scour` as static
+ * properties.
+ *
+ * This works immutably; that is, it will never modify `Scour` itself, and will
+ * always make a copy.
+ *
+ * Returns a new `Scour` class with additional powers.
+ *
+ *     let Scour = require('scour')
+ *     Scour = Scour.extend({
+ *       foo () { return 'bar' }
+ *     })
+ *
+ *     let instance = new Scour({})
+ *     instance.foo()  // => 'bar'
+ *
+ * Also see: [use()](#use)
+ */
+
 Scour.extend = require('./lib/extend')
+
+/**
+ * use : use(plugin, options)
+ * Loads a given `plugin`, passing optional `options`.
+ *
+ *     Scour = Scour.use(plugin)
+ *
+ *     // Same as:
+ *     Scour = plugin(Scour)
+ *
+ * Also see: [extend](#extend)
+ */
 
 Scour.use = function (plugin, options) {
   var args = [].slice.call(arguments, 1)
