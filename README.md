@@ -16,6 +16,7 @@ hscour is a faster implementation of [scour](https://www.npmjs.com/package/scour
 
 [![Status](https://travis-ci.org/rstacruz/hscour.svg?branch=master)](https://travis-ci.org/rstacruz/hscour "See test builds")
 
+[Redux]: http://redux.js.org
 
 ## Features
 
@@ -128,18 +129,18 @@ data =
 <!-- {.file-heading} -->
 
 ```js
-Root = {
+var Root = {
   artists () { return this.go('artists') }
 }
 
-Artist = {
+var Artist = {
   fullname () {
     return this.get('first_name') + ' ' + this.get('last_name')
   }
 }
 ```
 
-##### Using with scour
+##### Using with hscour
 
 <!-- {.file-heading} -->
 
